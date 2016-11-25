@@ -1,0 +1,178 @@
+body {
+     margin: 0px 0px;
+     background: #7f0898;
+     text-align: center;
+     font-family: verdana, arial, sans-serif;
+     font-size: 75%;
+     line-height: 1.4em;
+     color: #5D4825;
+}
+
+/* Page Structure
+------------------------------------------------------------------------------*/
+
+#header {
+     height: 150px;
+     background: #000000 top center;
+     border-bottom:1px solid #9c9c9c;
+}
+
+#banner {
+     width: 800px;
+     height: 150px;
+     margin: 0 auto;
+     padding: 0px;
+     background: #000000 url(./img/banner.jpg) top center no-repeat;     
+}
+
+#wrapper {
+     width: 791px;
+     margin: 0 auto;
+     padding: 0px;
+     background: #FFFFFF url(./img/content.jpg) center repeat-y;
+     text-align: left;
+}
+
+#menu {
+     height: 30px;
+     border-top:2px solid #0c2282;
+     border-bottom:1px solid #000000;
+     padding: 8px;
+     background: #0a3e91 url(./img/menu.jpg) repeat-x; 
+     clear: both;
+     text-align: center;
+     margin: 0;
+}
+
+#content {
+     padding: 1px 20px 0px 20px;
+     margin: 0;
+     text-align:left;
+}
+
+#footer {
+     width: 791px;
+     height: 16px;
+     margin: 0 auto;
+     padding: 0px;
+     background: url(./img/footer.gif) no-repeat; 
+}
+
+/* Typography
+------------------------------------------------------------------------------*/
+
+p {
+     font-size: 1em;
+     line-height: 1.7em;
+     margin: 0 0 1em 0;
+}
+
+h1 {
+     padding: 0;
+     font-size: 1.5em;
+     line-height: .4em;
+     letter-spacing: -1px;
+     margin: 1em 0 1em 0;   
+     color: #3101ab;
+}
+
+h2 {
+     padding: 0;
+     font-size: 1.2em;
+     line-height: .4em;
+     margin: 1em 0 1em 0;   
+     color: #5A2A18;
+}
+
+h3 {
+     padding: 0;
+     font-size: 1.0em;
+     line-height: .4em;
+     margin: 1em 0 1em 0;   
+     color: #5A2A18;
+}
+
+/* Hyperlinks
+------------------------------------------------------------------------------*/
+
+a:link, a:visited, a:active { 
+     background-color: transparent;
+     color: #CE7229; 
+     text-decoration: none;
+}
+
+a:hover { 
+     background-color: transparent;
+     color: #CE7229; 
+     text-decoration:underline;
+}
+
+/* Horizontal Menu
+------------------------------------------------------------------------------*/
+
+ul#navlist {
+     margin: 0;
+     padding: 0;
+     font-weight: bold;
+     font-size: 1.2em;
+     padding: .3em 0;
+}
+
+#navlist li {
+     display: inline;
+     list-style-type: none;
+     margin: 0; padding: 0;
+     line-height: 1.7em;
+}
+
+#navlist a { padding: .4em .6em; margin: 0;  margin: 1px; }
+
+#navlist a:link, #navlist a:visited {
+     color: #FFFFFF;
+     background-color: transparent;
+     text-decoration: none; 
+        
+}
+
+#navlist a:hover {
+     color: #FFFFFF;
+     background-color: #3101ab;
+     border: 1px solid #3B190C;
+     text-decoration: none;
+     margin:0;
+}
+
+/* Ordered/Unordered Lists
+------------------------------------------------------------------------------*/
+
+#content ul {
+     margin: 0 0 2.2em 5px;
+     padding-left: 0px;
+     list-style-type:none
+
+}
+
+#content  ol {
+     margin: 0 0 10px 0;
+     padding-left: 0;
+ 
+}
+
+#content  ol {
+     margin-left: 5px;
+     padding-left: 0px; 
+     background: none; 
+     list-style-type: decimal;
+     list-style-position: inside; 
+     font-size: 1em;
+     line-height: 1.6em;
+}
+
+#content  li {
+     padding-left: 10px;
+     background: transparent url(../img/bullet.gif) 0 0.5em no-repeat;
+     font-size: 1em;
+     line-height: 1.6em;
+}
+
+

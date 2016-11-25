@@ -1,0 +1,28 @@
+<div style="float: left; text-align: left; width: 350;">
+<center>
+<h2>Samantha Kunimura</h2>
+<img src="img/Sam.jpg" alt="Sam" />
+</center>
+<br />
+Hi my name is Samantha Kunimura! I’m 21 years old from Layton, UT. I grew up in the Navy and have
+lived in two different countries and five different states. I will be graduating from Rensselaer Polytechnic
+Institute (RPI) May 2012 with a bachelor of science in mechanical engineering. I am in Naval ROTC and
+will commission as a submarine officer in the United States Navy in May 2012. My hobbies include
+cooking/baking, sleeping, playing video games, and taking care of my fiancé.
+</div>
+
+<div style="float: right; text-align: left; width: 350;">
+<center>
+<h2>Joseph Salomone</h2>
+<img src="img/Joe.jpg" alt="Joe" />
+</center>
+<br />
+Hi, my name is Joseph Salomone! I’m 22 years old from Wilbraham, MA. I graduated May 2011
+from Rensselaer Polytechnic Institute (RPI) with a duel bachelor of science in computer and systems
+engineering and computer science. I am currently working towards my masters of science in computer
+science from RPI. I am expecting to graduate this May 2012 and am still searching for a job. I am also a
+brother of the Delta Psi Chapter of the Sigma Chi fraternity. I used to swim competitively throughout
+high school and my first two years of college. I love harassing my fiancé, programming, brewing beer,
+and fixing electronics.
+</div>
+<br />

@@ -1,0 +1,24 @@
+<center>
+	<h2>"If a hug represented how much I loved you, I would hold you in my arms forever."</h2>
+	<div style="position: relative; background: url(./img/Front1.jpg) no-repeat; width: 720; height: 380;">
+		<div style="position: absolute; bottom: 0; right: 0;"><a href="./index.php?idx=heavy">View Gallery</a>&nbsp;</div>
+	</div>
+
+
+
+	<div style="width: 720;">
+		<div style="float: left; text-align: left;">
+			<center><h2>Ceremony</h2></center>
+			<div style="position: relative; background: url(./img/Chruch.jpg) no-repeat; width: 350; height: 350;">
+				<div style="position: absolute; bottom: 0; right: 0;"><a href="http://www.saintceciliawilbraham.org/">View Website</a>&nbsp;</div>
+			</div>
+		</div>
+		<div style="float: right; text-align: left;">
+			<center><h2>Reception</h2></center>
+			<div style="position: relative; background: url(./img/Harding.jpg) no-repeat; width: 350; height: 350;">
+				<div style="position: absolute; bottom: 0; right: 0;"><a href="http://www.harding-allen.com/">View Website</a>&nbsp;</div>
+			</div>
+		</div>
+	</div>
+</center>
+<br />

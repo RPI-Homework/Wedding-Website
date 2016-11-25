@@ -1,0 +1,370 @@
+﻿<?php
+	//Edit Below
+	$maxSmallThumbnailWidth = 100;
+	$maxSmallThumbnailHeight = 100;
+	$maxLargeThumbnailWidth = 800;
+	$maxLargeThumbnailHeight = 400;
+	$acceptedimages = array('image/vnd.wap.wbmp', 'image/png', 'image/gif', 'image/jpeg');
+	$rootdirectory = './gallery/';
+	$indexpage = "index.php?idx=heavy&";
+	//Do not edit below
+
+	require_once('./php/file.php');
+	require_once('./php/thumbnails.php');
+	function createIndex($Location)
+	{
+		if(!is_file($Location))
+		{
+			createFile($Location, "<?php\nheader('Location: ..');\n?>", 'w', 0644, 0755);
+		}
+	}
+	function updateGallery($Location, $Gallery = array())
+	{
+		$data = "<?php\r\n\$gallery = array();\r\n";
+		foreach($Gallery as $key => $val)
+		{
+			if(isset($val['image']))
+			{
+				$data .= "\$gallery['" . $key . "'] = array('title' => '" . $val['title'] . "', 'image' => '" . $val['image'] . "', 'description' => '" . $val['description'] . "');\r\n";
+			}
+			else
+			{
+				$data .= "\$gallery['" . $key . "'] = array('title' => '" . $val['title'] . "', 'description' => '" . $val['description'] . "');\r\n";
+			}
+		}
+		$data .= "?>\r\n";
+		
+		createFile($Location, $data, 'w', 0644, 0755);
+	}
+	
+	function createAllThumbnails($ImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)
+	{
+		//check if image is allowed
+		$allow = false;
+		$imageInfo = getimagesize($ImageLocation);
+		$imageInfo['mime'] = strtolower($imageInfo['mime']);
+		foreach ($acceptedimages as $allowedimages)//check if legal image type
+		{
+			if ($imageInfo['mime'] == $allowedimages)
+			{
+				$allow = true;
+			}
+		}
+		if(!$allow)
+		{
+			return false;
+		}
+		
+		//check if image is small enough already
+		if($imageInfo[0] < $maxSmallThumbnailWidth && $imageInfo[1] < $maxSmallThumbnailHeight)
+		{
+			return array('small' => $ImageLocation, 'large' => $ImageLocation);
+		}
+		else
+		{
+			//Get directory, file name, and file extention
+			$directory = explode('/', $ImageLocation);
+			$fileName = array_pop($directory);
+			$fileDirectory = implode('/', $directory);
+			$file = explode('.', $fileName);
+			$fileExtention = array_pop($file);
+			$fileName = implode('.', $file);
+			
+			//if no file extention
+			if($fileName === '')
+			{
+				$fileName = $fileExtention;
+				$fileExtention = '';
+			}
+			
+			createIndex($fileDirectory . '/thumb/index.php');
+			
+			//find locations of the small and large thumbnails
+			$smallImageLocation = $fileDirectory . '/thumb/' . $fileName . '_small';
+			$largeImageLocation = $fileDirectory . '/thumb/' . $fileName . '_large';
+			if($fileExtention !== '')
+			{
+				$smallImageLocation .= '.' . $fileExtention;
+				$largeImageLocation .= '.' . $fileExtention;
+			}
+			
+			//if it is smaller than the large height and width
+			if($imageInfo[0] < $maxLargeThumbnailWidth && $imageInfo[1] < $maxLargeThumbnailHeight)
+			{
+				if(!is_file($smallImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $smallImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				return array('small' => $smallImageLocation, 'large' => $ImageLocation);
+			}
+			else
+			{
+				if(!is_file($smallImageLocation) && !is_file($largeImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, array($smallImageLocation, $largeImageLocation), array($maxSmallThumbnailWidth, $maxLargeThumbnailWidth), array($maxSmallThumbnailHeight, $maxLargeThumbnailHeight), $acceptedimages))
+					{
+						return false;
+					}
+				}
+				else if(!is_file($smallImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $smallImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				else if(!is_file($largeImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $largeImageLocation, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				return array('small' => $smallImageLocation, 'large' => $largeImageLocation);
+			}
+		}
+	}
+	
+	function ucname($string)
+	{
+		$string = strtolower($string);
+		foreach (array('_', ' ', '=5F', '=5f', '=20') as $delimiter)
+		{
+			if (strpos($string, $delimiter)!==false)
+			{
+				$string = implode('_', array_map("ucfirst", explode($delimiter, $string)));
+			}
+		}
+		return $string;
+	}
+	function udname($string)
+	{
+		$string = strtolower($string);
+		foreach (array('_', ' ', '=5F', '=5f', '=20') as $delimiter)
+		{
+			if (strpos($string, $delimiter)!==false)
+			{
+				$string = implode(' ', array_map("ucfirst", explode($delimiter, $string)));
+			}
+		}
+		return $string;
+	}
+
+	if (isset($_GET['project']))
+	{
+		$_GET['project'] = ucfirst(ucname($_GET['project']));
+	}
+	if(isset($_GET['project']) && is_dir($rootdirectory . $_GET['project']) && ($_GET['project'] != '.' && $_GET['project'] != '..'))//Makes sure directory is legal
+	{
+	echo '
+	<script type="text/javascript">
+  $(function() {
+    var galleries = $(\'.ad-gallery\').adGallery();
+    galleries[0].settings.link_with_new_window = true;
+  });
+  </script>
+	';
+	}
+	else
+	{
+	echo '
+	<script type="text/javascript">
+  $(function() {
+    var galleries = $(\'.ad-gallery\').adGallery();
+  });
+  </script>
+	';
+	}
+?>
+  <style type="text/css">
+  .example {
+    border: 1px solid #CCC;
+    background: #f2f2f2;
+    padding: 10px;
+  }
+  ul {
+    list-style-image:url(./img/list-style.gif);
+  }
+  pre {
+    font-family: "Lucida Console", "Courier New", Verdana;
+    border: 1px solid #CCC;
+    background: #f2f2f2;
+    padding: 10px;
+  }
+  code {
+    font-family: "Lucida Console", "Courier New", Verdana;
+    margin: 0;
+    padding: 0;
+  }
+
+  #gallery {
+    padding: 30px;
+    background: #FFFFFF;
+  }
+  #descriptions {
+    position: relative;
+    height: 50px;
+    background: #EEE;
+    margin-top: 10px;
+    width: 640px;
+    padding: 10px;
+    overflow: hidden;
+  }
+    #descriptions .ad-image-description {
+      position: absolute;
+    }
+      #descriptions .ad-image-description .ad-description-title {
+        display: block;
+      }
+  </style>
+
+<?php
+	echo '<div id="container">';
+	if(isset($_GET['project']) && is_dir($rootdirectory . $_GET['project']) && ($_GET['project'] != '.' && $_GET['project'] != '..'))//Makes sure directory is legal
+	{
+		echo "<h1>" . udname($_GET['project']) . "</h1>";
+		echo "<div style='float: right'><a href='" . $indexpage . "'>Back</a></div>";
+	}
+	else
+	{
+		echo "<h1>Gallery</h1>";
+	}
+?>
+    <div id="gallery" class="ad-gallery">
+      <div class="ad-image-wrapper">
+      </div>
+      <div class="ad-controls">
+      </div>
+      <div class="ad-nav">
+        <div class="ad-thumbs">
+          <ul class="ad-thumb-list">
+<?php
+	$idx = 0;
+	if(isset($_GET['project']) && is_dir($rootdirectory . $_GET['project']) && ($_GET['project'] != '.' && $_GET['project'] != '..'))//Makes sure directory is legal
+	{
+		if(!is_file($rootdirectory . $_GET['project'] . '/index.php'))//make index.php if it does not exist
+		{
+			createIndex($rootdirectory . $_GET['project'] . '/index.php');
+		}
+		if(!is_file($rootdirectory . $_GET['project'] . '/gallery.php'))//make gallery.php if it does not exist
+		{
+			updateGallery($rootdirectory . $_GET['project'] . '/gallery.php');
+		}
+		include($rootdirectory . $_GET['project'] . '/gallery.php');
+		foreach($gallery as $key => $val)
+		{
+			if(($thumbnails = createAllThumbnails($rootdirectory . $_GET['project'] . "/" . $key, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))
+			{
+				echo "<li>
+					<a href='" . $thumbnails['large'] . "'>
+					<img src='" . $thumbnails['small'] . "' title='" . $val['title'] . "' alt='" . $val['description'] . "' longdesc='" . $rootdirectory . $_GET['project'] . "/" . $key . "' class='image" . $idx . "' />
+					</a>
+					</li>";
+					$idx++;
+			}
+		}
+		$needupdate = false;
+		$projects = scandir($rootdirectory . $_GET['project']);
+		foreach($projects as $var)  
+		{
+			if($var != '.' && $var != '..' && $var != 'index.php' && is_file($rootdirectory . $_GET['project'] . "/" . $var))//checks for valid files
+			{
+				if(!array_key_exists($var, $gallery))
+				{
+					$needupdate = true;
+					if(($thumbnails = createAllThumbnails($rootdirectory . $_GET['project'] . "/" . $var, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))
+					{
+						$temp = array('title' => '', 'description' => '');
+						$gallery[$var] = $temp;
+						echo "<li>
+						<a href='" . $thumbnails['large'] . "/" . $var . "'>
+						<img src='" . $thumbnails['small'] . "' title='' alt='' longdesc='" . $rootdirectory . $_GET['project'] . "/" . $var . "' class='image" . $idx . "' />
+						</a>
+						</li>";
+						$idx++;
+					}
+				}
+			}
+		}
+		if($needupdate)
+		{
+			updateGallery($rootdirectory . $_GET['project'] . '/gallery.php', $gallery);
+		}
+	}
+	else
+	{
+		if(!is_file($rootdirectory . 'index.php'))//make index.php if it does not exist
+		{
+			createIndex($rootdirectory . 'index.php');
+		}
+		if(!is_file($rootdirectory . 'gallery.php'))//make gallery.php if it does not exist
+		{
+			updateGallery($rootdirectory . 'gallery.php');
+		}
+		include($rootdirectory . 'gallery.php');
+		foreach($gallery as $key => $val)
+		{
+			if(is_dir($rootdirectory . $key))
+			{
+				if(($thumbnails = createAllThumbnails($rootdirectory . $key . "/" . $val['image'], $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))
+				{
+					echo "<li>
+					<a href='" . $thumbnails['large'] . "'>
+					<img src='" . $thumbnails['small'] . "' title='" . $val['title'] . "' alt='" . $val['description'] . " <br /><span style=\"float: right\"><a href=\"" . $indexpage . "project=" . $key . "\">View Gallery</a></span>' longdesc='" . $indexpage . "project=" . $key . "' class='image" . $idx . "' />
+					</a>
+					</li>";
+					$idx++;
+				}
+			}
+		}
+		$needupdate = false;
+		$projects = scandir($rootdirectory);
+		foreach($projects as $var)  
+		{
+			if($var != '.' && $var != '..' && is_dir($rootdirectory . ucfirst(ucname($var))))
+			{
+				$key = ucfirst(ucname($var));
+				if(!array_key_exists($key, $gallery))
+				{
+					$needupdate = true;
+					$images = array();
+					$images = scandir($rootdirectory . $key);
+					$allow = false;
+					foreach($images as $var)  
+					{
+						if($var != '.' && $var != '..' && $var != 'index.php' && is_file($rootdirectory . $key . "/" . $var))//checks for valid files
+						{							
+							if(($thumbnails = createAllThumbnails($rootdirectory . $key . "/" . $var, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))
+							{
+								$temp = array('title' => ucfirst(udname($key)), 'image' => $var, 'description' => '');
+								$gallery[$key] = $temp;
+								
+								echo "<li>
+									<a href='" . $thumbnails['large'] . "'>
+									<img src='" . $thumbnails['small'] . "' title='" . ucfirst(udname($key)) . "' alt='<br /><span style=\"float: right\"><a href=\"" . $indexpage . "project=" . $key . "\">View Gallery</a></span>' longdesc='" . $indexpage . "project=" . $key . "' class='image" . $idx . "' />
+									</a>
+									</li>";
+								
+								break;
+							}
+						}
+					}
+					$idx++;
+				}
+			}
+		}
+		if($needupdate)
+		{
+			updateGallery($rootdirectory . '/gallery.php', $gallery);
+		}
+	}
+?>
+          </ul>
+        </div>
+      </div>
+    </div>
+<center><a href="./index.php?idx=gallery">View Lite Version</a></center>
+</div>

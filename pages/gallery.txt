@@ -1,0 +1,410 @@
+<?php
+	//Edit Below
+	$maxSmallThumbnailWidth = 100;
+	$maxSmallThumbnailHeight = 100;
+	$maxLargeThumbnailWidth = 800;
+	$maxLargeThumbnailHeight = 400;
+	$displaydates = false;
+	$acceptedimages = array('image/vnd.wap.wbmp', 'image/png', 'image/gif', 'image/jpeg');
+	$acceptedvideos = array('video/quicktime', 'video/mpeg', 'video/msvideo', 'video/x-ms-wmv', 'application/x-shockwave-flash', 'application/octet-stream');
+	$acceptedaudio = array('audio/wav', 'audio/mpeg3', 'audio/aiff', 'audio/mpeg');
+	$accepteddocuments = array('doc', 'docx', 'rtf', 'txt');
+	$rootdirectory = './gallery/';
+	$indexpage = "index.php?idx=gallery&";
+	
+	
+	//Do not edit below
+	require_once('./php/file.php');
+	require_once('./php/thumbnails.php');
+	$idx = 0;
+	$pro = 0;
+
+	function createIndex($Location)
+	{
+		if(!is_file($Location))
+		{
+			createFile($Location, "<?php\nheader('Location: ..');\n?>", 'w', 0644, 0755);
+		}
+	}
+	function updateGallery($Location, $Gallery = array())
+	{
+		$data = "<?php\r\n\$gallery = array();\r\n";
+		foreach($Gallery as $key => $val)
+		{
+			if(isset($val['image']))
+			{
+				$data .= "\$gallery['" . $key . "'] = array('title' => '" . $val['title'] . "', 'image' => '" . $val['image'] . "', 'description' => '" . $val['description'] . "');\r\n";
+			}
+			else
+			{
+				$data .= "\$gallery['" . $key . "'] = array('title' => '" . $val['title'] . "', 'description' => '" . $val['description'] . "');\r\n";
+			}
+		}
+		$data .= "?>\r\n";
+		
+		createFile($Location, $data, 'w', 0644, 0755);
+	}
+	
+	function createAllThumbnails($ImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)
+	{
+		//check if image is allowed
+		$allow = false;
+		$imageInfo = getimagesize($ImageLocation);
+		$imageInfo['mime'] = strtolower($imageInfo['mime']);
+		foreach ($acceptedimages as $allowedimages)//check if legal image type
+		{
+			if ($imageInfo['mime'] == $allowedimages)
+			{
+				$allow = true;
+			}
+		}
+		if(!$allow)
+		{
+			return false;
+		}
+		
+		//check if image is small enough already
+		if($imageInfo[0] < $maxSmallThumbnailWidth && $imageInfo[1] < $maxSmallThumbnailHeight)
+		{
+			return array('small' => $ImageLocation, 'large' => $ImageLocation);
+		}
+		else
+		{
+			//Get directory, file name, and file extention
+			$directory = explode('/', $ImageLocation);
+			$fileName = array_pop($directory);
+			$fileDirectory = implode('/', $directory);
+			$file = explode('.', $fileName);
+			$fileExtention = array_pop($file);
+			$fileName = implode('.', $file);
+			
+			//if no file extention
+			if($fileName === '')
+			{
+				$fileName = $fileExtention;
+				$fileExtention = '';
+			}
+			
+			createIndex($fileDirectory . '/thumb/index.php');
+			
+			//find locations of the small and large thumbnails
+			$smallImageLocation = $fileDirectory . '/thumb/' . $fileName . '_small';
+			$largeImageLocation = $fileDirectory . '/thumb/' . $fileName . '_large';
+			if($fileExtention !== '')
+			{
+				$smallImageLocation .= '.' . $fileExtention;
+				$largeImageLocation .= '.' . $fileExtention;
+			}
+			
+			//if it is smaller than the large height and width
+			if($imageInfo[0] < $maxLargeThumbnailWidth && $imageInfo[1] < $maxLargeThumbnailHeight)
+			{
+				if(!is_file($smallImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $smallImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				return array('small' => $smallImageLocation, 'large' => $ImageLocation);
+			}
+			else
+			{
+				if(!is_file($smallImageLocation) && !is_file($largeImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, array($smallImageLocation, $largeImageLocation), array($maxSmallThumbnailWidth, $maxLargeThumbnailWidth), array($maxSmallThumbnailHeight, $maxLargeThumbnailHeight), $acceptedimages))
+					{
+						return false;
+					}
+				}
+				else if(!is_file($smallImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $smallImageLocation, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				else if(!is_file($largeImageLocation))
+				{
+					if(!makeThumbnails($ImageLocation, $largeImageLocation, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages))
+					{
+						return false;
+					}
+				}
+				return array('small' => $smallImageLocation, 'large' => $largeImageLocation);
+			}
+		}
+	}
+	
+	function ucname($string)
+	{
+		$string = strtolower($string);
+		foreach (array('_', ' ', '=5F', '=5f', '=20') as $delimiter)
+		{
+			if (strpos($string, $delimiter)!==false)
+			{
+				$string = implode('_', array_map("ucfirst", explode($delimiter, $string)));
+			}
+		}
+		return $string;
+	}
+	function udname($string)
+	{
+		$string = strtolower($string);
+		foreach (array('_', ' ', '=5F', '=5f', '=20') as $delimiter)
+		{
+			if (strpos($string, $delimiter)!==false)
+			{
+				$string = implode(' ', array_map("ucfirst", explode($delimiter, $string)));
+			}
+		}
+		return $string;
+	}
+	//Images Page
+	if (isset($_GET['image']) && isset($_GET['project']))
+	{
+		$_GET['project'] = ucfirst(ucname($_GET['project']));
+		if(is_dir($rootdirectory . $_GET['project']) && ($_GET['project'] != '.' && $_GET['project'] != '..'))//Makes sure directory is legal
+		{
+			if(is_file($rootdirectory . $_GET['project'] . '/' . $_GET['image']) && $_GET['image'] != 'index.php')//makes sure image is legal
+			{
+				echo "<h1>" . udname($_GET['project']) . "</h1><br><br>";
+				$pro = 1;
+				$image = explode('.', $_GET['image']);
+				array_pop($image);
+				$imagename = implode('.', $image);
+				$allow = 0;
+				$imageInfo = getimagesize($rootdirectory . $_GET['project'] . '/' . $_GET['image']);
+				$imageInfo['mime'] = strtolower($imageInfo['mime']);
+				foreach ($acceptedimages as $allowedimages)//check if is image
+				{
+					if ($imageInfo['mime'] == $allowedimages)
+					{
+						if(($thumbnails = createAllThumbnails($rootdirectory . $_GET['project'] . "/" . $_GET['image'], $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))
+						{
+							echo "<center><a href='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'><img src='" . $thumbnails['large'] . "'></img></a></center><br>";						
+						} else {
+							echo "<center><a href='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'><img src='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'></img></a></center><br>";
+						}
+						break;
+					}
+				}
+				if(!$allow)
+				{
+					$f = escapeshellarg($rootdirectory . $_GET['project'] . '/' . $_GET['image']);
+					$imagetype = strtolower(trim( `file -bi $f` ));
+					foreach ($acceptedvideos as $allowedvideos)//check if is video
+					{
+						if ($imagetype == $allowedvideos)
+						{
+							$allow = 2;
+							echo "<center><embed width='690' height='500' src='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'></embed></center><br>";
+							if(is_dir($_GET['project'] . "/documents"))
+							{
+								if(!is_file($rootdirectory . $_GET['project'] . "/documents/index.php"))//make index.php if it does not exist
+								{
+									$handle = fopen($rootdirectory . $_GET['project'] . "/documents/index.php", 'w');
+									fwrite($handle, "<?php\n");
+									fwrite($handle, "header('Location: ..');\n");
+									fwrite($handle, "?>");
+									fclose($handle);
+								}
+								if(is_file($rootdirectory . $_GET['project'] . "/documents/" . $imagename . ".txt"))
+								{
+									include($rootdirectory . $_GET['project'] . "/documents/" . $imagename . ".txt");
+								}
+								echo "<br>";
+							}
+							else
+								echo "<br>";
+							echo "<center><a href='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'>&#60;Download&#62;</a></center>";
+							break;
+						}
+					}
+				}
+				if(!allow)//if is something else
+					echo "<a href='" . $rootdirectory . $_GET['project'] . "/" . $_GET['image'] . "'>" . $_GET['image'] . "</a><br>";
+				if(is_dir($_GET['project'] . "/documents"))
+				{
+					if(!is_file($_GET['project'] . "/documents/index.php"))//make index.php if it does not exist
+					{
+						$handle = fopen($rootdirectory . $_GET['project'] . "/documents/index.php", 'w');
+						fwrite($handle, "<?php\n");
+						fwrite($handle, "header('Location: ..');\n");
+						fwrite($handle, "?>");
+						fclose($handle);
+					}
+					if(is_file($rootdirectory . $_GET['project'] . "/documents/" . $imagename . ".txt") && !($allow == 2))
+					{
+						include($rootdirectory . $_GET['project'] . "/documents/" . $imagename . ".txt");
+						echo "<br>";
+					}
+				}
+				echo "<center><a href='" . $indexpage . "project=" . $_GET['project'] . "&page=1'>&#60;Back&#62;</a></center><br>";
+			}
+		}
+	}
+	//Projects Page
+	if (isset($_GET['project']) && !$pro)
+	{
+		$_GET['project'] = ucfirst(ucname($_GET['project']));
+		if(is_dir($rootdirectory . $_GET['project']) && ($_GET['project'] != '.' && $_GET['project'] != '..'))//Makes sure directory is legal
+		{
+			if(!is_file($rootdirectory . $_GET['project'] . "/index.php"))//make index.php if it does not exist
+			{
+				$handle = fopen($rootdirectory . $_GET['project'] . "/index.php", 'w');
+				fwrite($handle, "<?php\n");
+				fwrite($handle, "header('Location: ..');\n");
+				fwrite($handle, "?>");
+				fclose($handle);
+			}
+			if(!is_numeric($_GET['page']))//Makes sure page # is legal
+				$_GET['page'] = 1;
+			else if ($_GET['page'] < 1)
+				$_GET['page'] = 1;
+			$projects = array();
+			$projects = scandir($rootdirectory . $_GET['project']);
+			$count = 0;
+			$allow = false;
+			foreach($projects as $var)//Get the count of valid documents
+				if(is_file($rootdirectory . $_GET['project'] . "/" . $var) && $var != 'index.php')
+					$count++;
+			$_GET['page'] = floor((int)$_GET['page']);
+			$maxpages = ceil($count / 6);
+			if($_GET['page'] > $maxpages)//Makes sure page # is legal
+				$_GET['page'] = $maxpages;
+			$lowend = ($_GET['page'] - 1) * 6;
+			$highend = ($_GET['page'] - 1) * 6 + 5;
+			if($highend > $count)
+				$diff = $count - $lowend;
+			else
+				$diff = 6;
+			echo "<h1>" . udname($_GET['project']) . "</h1><br><br>";
+			if($count > 0)
+			{
+				if($diff != 1)
+					echo '<table width="' . $maxwidth . '" border="0" align="center" cellpadding="0" cellspacing="0"><tr><td><center>';
+				foreach($projects as $var)  
+				{
+					if($var != '.' && $var != '..' && $var != 'index.php' && is_file($rootdirectory . $_GET['project'] . "/" . $var))//checks for valid files
+					{
+						if($lowend <= $idx && $idx <= $highend)
+						{
+							$allow = 0;
+							$imageInfo = getimagesize($rootdirectory . $_GET['project'] . "/" . $var);
+							$imageInfo['mime'] = strtolower($imageInfo['mime']);
+							$thumbnails = null;
+							foreach ($acceptedimages as $allowedimages)//check if legal image type
+							{
+								if ($imageInfo['mime'] == $allowedimages)
+								{
+									$allow = 1;
+									if(false === ($thumbnails = createAllThumbnails($rootdirectory . $_GET['project'] . "/" . $var, $maxSmallThumbnailWidth, $maxSmallThumbnailHeight, $maxLargeThumbnailWidth, $maxLargeThumbnailHeight, $acceptedimages)))//creates a thumbnail
+										$allow = 3;
+									break;
+								}
+							}
+							if($allow == 0)
+							{
+								$f = escapeshellarg($rootdirectory . $_GET['project'] . "/" . $var);
+								$imagetype = strtolower(trim( `file -bi $f` ));
+								foreach ($acceptedvideos as $allowedvideos)//check if legal video type
+								{
+									if ($imagetype == $allowedvideos)
+									{
+										$allow = 2;
+										break;
+									}
+								}
+							}
+							if($diff != 1)
+								if(($diff >= 5 && ($idx % 3) == 0) || ($diff >= 3 && $diff < 5 && ($idx % 2) == 0))
+									echo "</center></td></tr><tr><td><center>";
+								else if($idx != 0)
+									echo "</center></td><td><center>";
+							if($displaydates)
+								echo date('n/j/y g:i:s A', filectime($_GET['project'] . "/" . $var)) . "<br>";
+							if($allow == 1)
+							{
+								echo "<a href='" . $indexpage . "project=" . $_GET['project'] . "&image=" . $var . "'><img src='" . $thumbnails['small'] . "'></img></a><br>";
+								echo "<a href='" . $indexpage . "project=" . $_GET['project'] . "&image=" . $var . "'>" . $var . "</a><br>";
+							}
+							else if($allow == 2)
+							{
+								echo "<a href='" . $indexpage . "project=" . $_GET['project'] . "&image=" . $var . "'>" . $var . "</a><br>";
+							}
+							else
+							{
+								echo "<a href='" . $_GET['project'] . "/" . $var . "'>" . $var . "</a><br>";
+							}
+							$idx++;
+						}
+						else if($idx > $highend)
+							break;
+						else
+							$idx++;
+					}
+				}
+				if($diff != 1)
+					echo "</center></td></tr></table>";
+				if($maxpages > 1)//Makes page progression
+				{
+					echo "<center>";
+					if($_GET['page'] > 1)
+						echo "<a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 1) . "'>&#60;&#60;Last Page</a>";
+					if($_GET['page'] - 5 >= 1)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 5) . "'>" . ($_GET['page'] - 5) . "</a>";
+					if($_GET['page'] - 4 >= 1)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 4) . "'>" . ($_GET['page'] - 4) . "</a>";
+					if($_GET['page'] - 3 >= 1)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 3) . "'>" . ($_GET['page'] - 3) . "</a>";
+					if($_GET['page'] - 2 >= 1)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 2) . "'>" . ($_GET['page'] - 2) . "</a>";
+					if($_GET['page'] - 1 >= 1)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] - 1) . "'>" . ($_GET['page'] - 1) . "</a>";
+					echo " " . $_GET['page'];
+					if($_GET['page'] + 1 <= $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 1) . "'>" . ($_GET['page'] + 1) . "</a>";
+					if($_GET['page'] + 2 <= $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 2) . "'>" . ($_GET['page'] + 2) . "</a>";
+					if($_GET['page'] + 3 <= $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 3) . "'>" . ($_GET['page'] + 3) . "</a>";
+					if($_GET['page'] + 4 <= $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 4) . "'>" . ($_GET['page'] + 4) . "</a>";
+					if($_GET['page'] + 5 <= $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 5) . "'>" . ($_GET['page'] + 5) . "</a>";
+					if($_GET['page'] < $maxpages)
+						echo " <a href='" . $indexpage . "project=" . $_GET['project'] . "&page=" . ($_GET['page'] + 1) . "'>Next Page&#62;&#62;</a>";
+					echo "</center>";
+				}
+			}
+			else
+			{
+				echo "There is currently nothing in this directory";
+			}
+			echo "<br><center><a href='" . $indexpage . "'>&#60;Back&#62;</a></center><br>";
+			$idx = 1;
+		}
+	}
+	if (!$idx && !$pro)
+	{
+				echo "<h1>Gallery</h1>";
+				if($displaydates)
+					echo "<table>";
+				$projects = scandir($rootdirectory);
+				foreach($projects as $var)  
+				{
+					if($var != '.' && $var != '..' && is_dir($rootdirectory . ucfirst(ucname($var))))
+					{
+						if($displaydates)
+							echo "<tr><td><a href='" . $indexpage . "project=" . ucfirst(ucname($var)) . "&page=1'>" . ucfirst(udname($var)) . "</a></td><td>" . date('n/j/y g:i:s A', filectime($var)) . "</td></tr>";
+						else
+							echo "<a href='" . $indexpage . "project=" . ucfirst(ucname($var)) . "&page=1'>" . ucfirst(udname($var)) . "</a><br>";
+					}
+				}
+				if($displaydates)
+					echo "</table>";
+	}
+//LATEST IMAGE  filemtime;
+//latest change filectime;
+?>

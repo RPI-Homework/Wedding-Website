@@ -1,0 +1,18 @@
+﻿<div style="float: left; text-align: center; width: 350;">
+<h2>Samantha Kunimura</h2>
+<img src="img/Sam.jpg" alt="Sam" /><br />
+(801) 710-1499<br />
+<a href="mailto:samkunimura@gmail.com">samkunimura@gmail.com</a>
+</div>
+
+<div style="float: right; text-align: center; width: 350;">
+<h2>Joseph Salomone</h2>
+<img src="img/Joe.jpg" alt="Joe" /><br />
+1000 SW Vista Ave<br />
+Apt. 1124<br />
+Portland, OR 97205-1141<br />
+(413) 218-7233<br />
+<a href="mailto:salomj9@gmail.com">salomj9@gmail.com</a>
+</div>
+
+<br />

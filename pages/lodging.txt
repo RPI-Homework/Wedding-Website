@@ -1,0 +1,177 @@
+<h2>Near Ceremony</h2>
+        <table border="0" cellpadding="3" cellspacing="4" bordercolor="#454E5E">
+            <tr>
+                <td width="200"><a href="http://www.wilbrahaminnmotel.com/">Wilbraham Inn</a></td>
+                <td width="180">2009 Boston Road</td>
+                <td width="120">Wilbraham</td>
+                <td align="right" width="140">(413) 543-3787</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://www.pvhg.com/comfort-inn-suites-ludlow.php">Comfort Inn & Suites</a></td>
+                <td width="180">321 Center Street</td>
+                <td width="120">Ludlow</td>
+                <td align="right" width="140">(413) 589-9300</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://www.hojo.com/hotels/massachusetts/springfield/howard-johnson-express-springfield/hotel-overview?hotel_id=10654&campaign_code=IP_Local&iata=00065402&corporate_id=1000008335">Howard Johnson Express</a></td>
+                <td width="180">1356 Boston Road</td>
+                <td width="120">Springfield</td>
+                <td align="right" width="140">(413) 783-2111</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://www.marriott.com/hotels/travel/bdlma-springfield-marriott/">Marriott</a></td>
+                <td width="180">2 Boland Way</td>
+                <td width="120">Springfield</td>
+                <td align="right" width="140">(413) 781-7111</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://www.starwoodhotels.com/sheraton/property/overview/index.html?propertyID=989">Sheraton</a></td>
+                <td width="180">1 Monarch Place</td>
+                <td width="120">Springfield</td>
+                <td align="right" width="140">(413) 781-1010</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://www.hiltongardeninn.com/en/gi/hotels/index.jhtml?ctyhocn=SFYMAGI">Hilton Garden Inn</a></td>
+                <td width="180">800 W Columbus Ave</td>
+                <td width="120">Springfield</td>
+                <td align="right" width="140">(413) 886-8000</td>
+            </tr>
+        </table>
+<br />
+<h2>Near Reception</h2>
+        <table border="0" cellpadding="3" cellspacing="4" bordercolor="#454E5E">
+            <tr>
+                <td width="200"><a
+                href="http://www.harding-allen.com/">Harding Allen Estate</a></td>
+                <td width="180">59 Allen Drive</td>
+                <td width="120">Barre </td>
+                <td align="right" width="140">(978) 355-4920</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.stevensfarminn.com/">Stevens
+                Farm Inn</a></td>
+                <td width="180">749 Old Coldbrook Road</td>
+                <td width="120">Barre </td>
+                <td align="right" width="140">(978) 355-2227</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.greatrockalpacas.com/">Great
+                Rock Alpacas</a></td>
+                <td width="180">280 Hardwick Road </td>
+                <td width="120">Barre </td>
+                <td align="right" width="140">(978) 355-2119</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.winterwoodinn.net/">Winterwood </a></td>
+                <td width="180">19 North Main Street </td>
+                <td width="120">Petersham </td>
+                <td align="right" width="140">(978) 724-8885</td>
+            </tr>
+            <tr>
+                <td width="200"><a href="http://clamberhill.com/">The
+                Inn at Clamber Hill </a></td>
+                <td width="180">111 North Main Street </td>
+                <td width="120">Petersham </td>
+                <td align="right" width="140">(978) 724-8800</td>
+            </tr>
+            <tr>
+                <td width="200">Pine Hill Farm </td>
+                <td width="180">Pond Street </td>
+                <td width="120">Paxton </td>
+                <td align="right" width="140">(508) 791-1762</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.colonial-hotel.com">Colonial
+                Hotel </a></td>
+                <td width="180">625 Betty Springs Road </td>
+                <td width="120">Gardner </td>
+                <td align="right" width="140">(978) 630-2500<br />(888) 214-4991</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.wachusettvillageinn.com/">Wachusett
+                Village Inn </a></td>
+                <td width="180">off Rt. 2 </td>
+                <td width="120">Westminster </td>
+                <td align="right" width="140">(978) 874-2000</td>
+            </tr>
+            <tr>
+                <td width="200">King Philip Motel </td>
+                <td width="180">off Rt. 2 </td>
+                <td width="120">Philipston </td>
+                <td align="right" width="140">(978) 249-6300</td>
+            </tr>
+            <tr>
+                <td width="200"><a
+                href="http://www.marriott.com/hotels/travel/boswr-courtyard-worcester">Courtyard
+                by Marriott</a></td>
+                <td width="180">72 Grove Street </td>
+                <td width="120">Worcester</td>
+                <td align="right" width="140">(888) 887-7948<br />(508) 363-0300</td>
+            </tr>
+            <tr>
+                <td>Hilton Garden Inn</td>
+                <td>35 Major Taylor Blvd.</td>
+                <td>Worcester</td>
+                <td align="right">(508)-753-5700</td>
+            </tr>
+            <tr>
+                <td width="200">The Hampton Inn </td>
+                <td width="180">110 Summer Street </td>
+                <td width="120">Worcester </td>
+                <td align="right" width="140">(508) 757-0400</td>
+            </tr>
+            <tr>
+                <td width="200">Clarion Suites Hotel</td>
+                <td width="180">70 Southbridge Street</td>
+                <td width="120">Worcester</td>
+                <td align="right" width="140">(800) 753-3512<br />(508) 252-7466</td>
+            </tr>
+            <tr>
+                <td width="200">Beechwood Hotel </td>
+                <td width="180">363 Plantation Street </td>
+                <td width="120">Worcester </td>
+                <td align="right" width="140">(508) 754-5789</td>
+            </tr>
+            <tr>
+                <td width="200">Days Inn </td>
+                <td width="180">50 Oriole Drive </td>
+                <td width="120">Worcester </td>
+                <td align="right" width="140">(508) 852-2800</td>
+            </tr>
+            <tr>
+                <td width="200">University Hotel </td>
+                <td width="180">800 Southbridge Street </td>
+                <td width="120">Worcester </td>
+                <td align="right" width="140">(508) 791-3500</td>
+            </tr>
+            <tr>
+                <td width="200">Econo Lodge </td>
+                <td width="180">531 Lincoln Street </td>
+                <td width="120">Worcester</td>
+                <td align="right" width="140">(508) 852-5800</td>
+            </tr>
+            <tr>
+                <td width="200">Hampton Inn</td>
+                <td width="180">110 Summer Street</td>
+                <td width="120">Worcester</td>
+                <td align="right" width="140">(800) 426-7866<br />(508) 757-0400</td>
+            </tr>
+            <tr>
+                <td width="200">Days Inn </td>
+                <td width="180">889 Boston Turnpike </td>
+                <td width="120">Shrewsbury </td>
+                <td align="right" width="140">(508) 842-8500</td>
+            </tr>
+            <tr>
+                <td width="200">Sheraton Four Points </td>
+                <td width="180">99 Eardman Way </td>
+                <td width="120">Leominster </td>
+                <td align="right" width="140">(978) 534-9000</td>
+            </tr>
+        </table>
+            

@@ -1,0 +1,33 @@
+<h2><a href="mailo:ji17giff@siena.edu">Jenna and Brian</a></h2>
+Date: Saturday 21 January 2012 7:52 PM<br />
+HIII! Alex says \&quot;01000011 01101111 01101110 01100111 01110010 01100001 01110100 01110101 01101100 01100001 01110100 01101001 01101111 01101110 01110011 00100000 01100001 01101110 01100100 00100000 01110111 01100101 00100000 01100011 01100001 01101110 01101110 01101111 01110100 00100000 01110111 01100001 01101001 01110100 00101110\&quot;<br />
+<br />
+<h2><a href="mailo:weltza3@gmail.com">adam</a></h2>
+Date: Thursday 19 January 2012 12:32 PM<br />
+creating a website for your wedding is such a cool idea.  I even shared it with 2 of my engaged friends from home.  It looks great<br />
+<br />
+<br />
+<br />
+<center>
+<form name="input" action="guestbook.php" method="post">
+<table>
+<tr>
+<td>Type "salomone":</td><td><input type="text" name="bot" size="80" /><br /></td>
+</tr>
+<tr>
+<td>Name:</td><td><input type="text" name="name" size="80" /><br /></td>
+</tr>
+<tr>
+<td>Email:</td><td><input type="text" name="email" size="80" /><br /></td>
+</tr>
+<tr>
+<td>Message:</td><td><textarea name="message" cols="80" rows="5"></textarea><br /></td>
+</tr>
+<tr>
+<td colspan="2" align="right"><input type="submit" value="Submit" /></td>
+</tr>
+</table>
+</form>
+</center>
+
+<br />
